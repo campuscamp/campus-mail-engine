@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f3f0ec; color: #1e293b; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; }
+    .header { background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%); padding: 32px 24px; text-align: center; border-bottom: 4px solid #e8a838; }
+    .header h1 { color: #ffffff; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 3px; }
+    .header .subtitle { color: #e8a838; font-size: 11px; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .header .badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border: 1px solid #e8a838; color: #e8a838; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+    .federation-bar { background: #fdf6e8; padding: 14px 24px; border-bottom: 1px solid #e8dcc8; font-size: 13px; color: #1e3a5f; text-align: center; font-weight: 600; }
+    .content { padding: 32px 24px; line-height: 1.7; font-size: 15px; }
+    .content h2 { color: #1e3a5f; font-size: 20px; margin: 0 0 16px; }
+    .content h3 { color: #1e3a5f; font-size: 16px; margin: 24px 0 12px; }
+    .content p { margin: 0 0 16px; color: #374151; }
+    .member-card { background: #f8f5f0; border: 1px solid #e8dcc8; border-radius: 8px; padding: 20px; margin: 16px 0; }
+    .member-card h4 { color: #1e3a5f; margin: 0 0 8px; }
+    .member-card p { font-size: 13px; margin: 0; color: #64748b; }
+    .member-list { margin: 16px 0; }
+    .member-item { display: inline-block; background: #fdf6e8; border: 1px solid #e8dcc8; padding: 6px 14px; margin: 3px; font-size: 12px; color: #1e3a5f; border-radius: 4px; }
+    .network-box { background: linear-gradient(135deg, #1e3a5f 0%, #2d5f8a 100%); color: #ffffff; padding: 24px; margin: 24px 0; text-align: center; border-radius: 8px; }
+    .network-box h3 { color: #e8a838; margin: 0 0 8px; font-size: 18px; }
+    .network-box p { color: #a0b8d0; font-size: 13px; margin: 0 0 16px; }
+    .highlight { background: #fdf6e8; border-left: 4px solid #e8a838; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .btn { display: inline-block; padding: 14px 36px; background: #1e3a5f; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .btn-gold { display: inline-block; padding: 14px 36px; background: #e8a838; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .btn-white { display: inline-block; padding: 12px 28px; background: #ffffff; color: #1e3a5f !important; text-decoration: none; font-weight: 600; font-size: 13px; border-radius: 6px; }
+    .footer { padding: 24px; background: #1e3a5f; text-align: center; font-size: 11px; color: #8aa4c0; }
+    .footer a { color: #e8a838; text-decoration: none; }
+    .footer .campus-brand { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; display: block; }
+    .footer .motto { color: #e8a838; font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; display: block; }
+    @media (max-width: 600px) { .content { padding: 24px 16px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CAMPUS</h1>
+      <div class="subtitle">Network Federativo per la Formazione</div>
+      <div class="badge">Federazioni Professionali</div>
+    </div>
+
+    {{#if federation_name}}
+    <div class="federation-bar">{{federation_name}}</div>
+    {{/if}}
+
+    <div class="content">
+      <h2>Gentile {{title}} {{last_name}},</h2>
+      <p>{{body}}</p>
+
+      {{#if program_details}}
+      <div class="member-card">
+        <h4>📋 Proposta per la Federazione</h4>
+        {{#if program_name}}<p><strong>Programma:</strong> {{program_name}}</p>{{/if}}
+        {{#if target}}<p><strong>Destinatari:</strong> {{target}}</p>{{/if}}
+        {{#if scope}}<p><strong>Ambito:</strong> {{scope}}</p>{{/if}}
+        {{#if cfp_credits}}<p><strong>Crediti:</strong> {{cfp_credits}} CFP</p>{{/if}}
+      </div>
+      {{/if}}
+
+      {{#if member_bodies}}
+      <h3>Enti federati coinvolti</h3>
+      <div class="member-list">
+        {{#each member_bodies}}
+        <span class="member-item">{{this}}</span>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if cta_url}}
+      <p style="text-align:center;">
+        <a href="{{cta_url}}" class="btn">{{cta_text}}</a>
+      </p>
+      {{/if}}
+
+      <div class="network-box">
+        <h3>Network CAMPUS per le Federazioni</h3>
+        <p>Programmi trasversali per più ordini/collegi, accreditamento multiplo, gestione centralizzata dei percorsi formativi.</p>
+        <a href="{{network_url}}" class="btn-white">Esplora il network</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="campus-brand">CAMPUS</span>
+      <span class="motto">DISCERE · DOCERE · CRESCERE</span>
+      <p><a href="{{campus_url}}">campus.camp</a> · <a href="mailto:info@campus.camp">info@campus.camp</a></p>
+      <p>Ricevi questa email perché {{reason}}.</p>
+      <p><a href="{{unsubscribe_url}}">Cancella iscrizione</a> · <a href="{{privacy_url}}">Privacy Policy</a></p>
+    </div>
+  </div>
+</body>
+</html>

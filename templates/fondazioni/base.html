@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f0eee8; color: #1e293b; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; }
+    .header { background: linear-gradient(135deg, #2d3436 0%, #4a4a4a 100%); padding: 32px 24px; text-align: center; border-bottom: 4px solid #00b894; }
+    .header h1 { color: #ffffff; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 3px; }
+    .header .subtitle { color: #00b894; font-size: 11px; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .header .badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border: 1px solid #00b894; color: #55efc4; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; }
+    .mission-bar { background: #e8faf4; padding: 14px 24px; border-bottom: 1px solid #b2dfdb; font-size: 13px; color: #2d3436; text-align: center; }
+    .content { padding: 32px 24px; line-height: 1.7; font-size: 15px; }
+    .content h2 { color: #2d3436; font-size: 20px; margin: 0 0 16px; }
+    .content h3 { color: #2d3436; font-size: 16px; margin: 24px 0 12px; }
+    .content p { margin: 0 0 16px; color: #374151; }
+    .impact-card { background: linear-gradient(135deg, #e8faf4 0%, #d4f5e9 100%); border: 1px solid #b2dfdb; border-radius: 8px; padding: 20px; margin: 16px 0; }
+    .impact-card h4 { color: #00796b; margin: 0 0 8px; }
+    .impact-card p { font-size: 13px; margin: 0; color: #4a6b64; }
+    .impact-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+    .impact-item { flex: 1 1 30%; background: #f8fffe; border: 1px solid #b2dfdb; border-radius: 8px; padding: 16px; text-align: center; }
+    .impact-number { font-size: 28px; font-weight: 700; color: #00796b; display: block; }
+    .impact-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+    .grant-box { background: #fff8e1; border-left: 4px solid #ffa000; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .grant-box strong { color: #e65100; }
+    .btn { display: inline-block; padding: 14px 36px; background: #00796b; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .btn-dark { display: inline-block; padding: 14px 36px; background: #2d3436; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .campus-mission { background: #2d3436; color: #ffffff; padding: 24px; margin: 24px 0; text-align: center; border-radius: 8px; }
+    .campus-mission h3 { color: #55efc4; margin: 0 0 8px; font-size: 18px; }
+    .campus-mission p { color: #a0b0a8; font-size: 13px; margin: 0 0 16px; }
+    .btn-white { display: inline-block; padding: 12px 28px; background: #ffffff; color: #2d3436 !important; text-decoration: none; font-weight: 600; font-size: 13px; border-radius: 6px; }
+    .footer { padding: 24px; background: #2d3436; text-align: center; font-size: 11px; color: #8fa8a0; }
+    .footer a { color: #55efc4; text-decoration: none; }
+    .footer .campus-brand { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; display: block; }
+    .footer .motto { color: #55efc4; font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; display: block; }
+    @media (max-width: 600px) { .content { padding: 24px 16px; } .impact-grid { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CAMPUS</h1>
+      <div class="subtitle">Impatto Sociale e Sviluppo del Capitale Umano</div>
+      <div class="badge">Fondazioni</div>
+    </div>
+
+    {{#if foundation_name}}
+    <div class="mission-bar">{{foundation_name}}</div>
+    {{/if}}
+
+    <div class="content">
+      <h2>Gentile {{title}} {{last_name}},</h2>
+      <p>{{body}}</p>
+
+      {{#if impact_data}}
+      <h3>Impatto misurato</h3>
+      <div class="impact-grid">
+        {{#each impact_data}}
+        <div class="impact-item">
+          <span class="impact-number">{{this.value}}</span>
+          <span class="impact-label">{{this.label}}</span>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if project_details}}
+      <div class="impact-card">
+        <h4>🌱 {{project_name}}</h4>
+        <p>{{project_details}}</p>
+      </div>
+      {{/if}}
+
+      {{#if grant_info}}
+      <div class="grant-box">
+        <strong>💰 Opportunità di finanziamento</strong><br>
+        {{grant_info}}
+      </div>
+      {{/if}}
+
+      {{#if cta_url}}
+      <p style="text-align:center;">
+        <a href="{{cta_url}}" class="btn">{{cta_text}}</a>
+      </p>
+      {{/if}}
+
+      <div class="campus-mission">
+        <h3>CAMPUS per le Fondazioni</h3>
+        <p>Co-progettazione di percorsi formativi ad impatto sociale. Reportistica ESG, misurazione outcomes, bandi collaborativi.</p>
+        <a href="{{partnership_url}}" class="btn-white">Progetta con noi</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="campus-brand">CAMPUS</span>
+      <span class="motto">DISCERE · DOCERE · CRESCERE</span>
+      <p><a href="{{campus_url}}">campus.camp</a> · <a href="mailto:info@campus.camp">info@campus.camp</a></p>
+      <p>Ricevi questa email perché {{reason}}.</p>
+      <p><a href="{{unsubscribe_url}}">Cancella iscrizione</a> · <a href="{{privacy_url}}">Privacy Policy</a></p>
+    </div>
+  </div>
+</body>
+</html>

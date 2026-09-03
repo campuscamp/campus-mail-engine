@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Georgia', 'Times New Roman', serif; background-color: #f3f0eb; color: #2a2520; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #d8cfc0; }
+    .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 32px 24px; text-align: center; border-bottom: 4px solid #9b870c; }
+    .header h1 { color: #ffffff; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .header .subtitle { color: #e2c044; font-size: 11px; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .header .badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border: 1px solid #e2c044; color: #e2c044; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+    .register-bar { background: #fdf8ed; padding: 16px 24px; border-bottom: 2px solid #e2c044; text-align: center; }
+    .register-bar .title { font-size: 14px; font-weight: 700; color: #1a1a2e; letter-spacing: 1px; }
+    .register-bar .subtitle { font-size: 11px; color: #7a6f5f; margin-top: 4px; }
+    .content { padding: 32px 24px; line-height: 1.7; font-size: 15px; }
+    .content h2 { color: #1a1a2e; font-size: 20px; margin: 0 0 16px; font-weight: 600; }
+    .content h3 { color: #0f3460; font-size: 16px; margin: 24px 0 12px; }
+    .content p { margin: 0 0 16px; color: #3d3630; }
+    .content ul { margin: 0 0 16px; padding-left: 20px; }
+    .content li { margin-bottom: 8px; color: #3d3630; }
+    .albo-info { background: linear-gradient(135deg, #fdf8ed 0%, #f5eed9 100%); border: 1px solid #d8cfc0; padding: 20px; margin: 20px 0; }
+    .albo-info h4 { color: #1a1a2e; margin: 0 0 12px; font-size: 15px; border-bottom: 1px solid #d8cfc0; padding-bottom: 8px; }
+    .albo-info .detail { margin-bottom: 8px; font-size: 14px; }
+    .albo-info .detail strong { color: #1a1a2e; }
+    .obligation-box { background: #fff3cd; border-left: 4px solid #9b870c; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .obligation-box strong { color: #1a1a2e; }
+    .obligation-box .ref { font-size: 12px; color: #7a6f5f; font-style: italic; margin-top: 8px; }
+    .compliance-badge { display: inline-block; background: #1a1a2e; color: #e2c044; padding: 4px 12px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .btn { display: inline-block; padding: 14px 36px; background: #1a1a2e; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin: 16px 0; }
+    .btn-gold { display: inline-block; padding: 14px 36px; background: #9b870c; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin: 16px 0; }
+    .btn-outline { display: inline-block; padding: 12px 28px; background: transparent; color: #1a1a2e !important; text-decoration: none; border: 2px solid #1a1a2e; font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin: 8px 0; }
+    .professional-list { margin: 20px 0; }
+    .professional-item { display: inline-block; background: #fdf8ed; border: 1px solid #e8e0d0; padding: 6px 14px; margin: 3px; font-size: 12px; color: #1a1a2e; font-weight: 600; }
+    .campus-partnership { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: #ffffff; padding: 24px; margin: 24px 0; text-align: center; }
+    .campus-partnership h3 { color: #e2c044; margin: 0 0 8px; font-size: 18px; }
+    .campus-partnership p { color: #a0b4cc; font-size: 13px; margin: 0 0 16px; }
+    .btn-white { display: inline-block; padding: 12px 28px; background: #ffffff; color: #1a1a2e !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+    .divider { border: none; border-top: 1px solid #e8e0d0; margin: 24px 0; }
+    .footer { padding: 24px; background: #1a1a2e; text-align: center; font-size: 11px; color: #8a9ab0; }
+    .footer a { color: #e2c044; text-decoration: none; }
+    .footer .campus-brand { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; display: block; }
+    .footer .motto { color: #e2c044; font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; display: block; }
+    @media (max-width: 600px) {
+      .content { padding: 24px 16px; }
+      .header { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CAMPUS</h1>
+      <div class="subtitle">Formazione Professionale Obbligatoria e Continua</div>
+      <div class="badge">Albi Professionali</div>
+    </div>
+
+    <div class="register-bar">
+      <div class="title">{{#if register_name}}{{register_name}}{{else}}Comunicazione per gli Albi Professionali{{/if}}</div>
+      <div class="subtitle">Formazione accreditata per il mantenimento dell'iscrizione</div>
+    </div>
+
+    <div class="content">
+      <h2>Gentile {{title}} {{last_name}},</h2>
+
+      <p>{{body}}</p>
+
+      {{#if obligation}}
+      <div class="obligation-box">
+        <strong>⚖️ Obbligo formativo</strong><br><br>
+        {{obligation}}
+        {{#if legal_reference}}
+        <div class="ref">Rif. normativo: {{legal_reference}}</div>
+        {{/if}}
+      </div>
+      {{/if}}
+
+      {{#if program_details}}
+      <div class="albo-info">
+        <h4>📋 Percorso formativo accreditato</h4>
+        {{#if program_name}}<div class="detail"><strong>Programma:</strong> {{program_name}}</div>{{/if}}
+        {{#if cfp_credits}}<div class="detail"><strong>Crediti:</strong> {{cfp_credits}} CFP — <span class="compliance-badge">Accreditato</span></div>{{/if}}
+        {{#if accrediting_body}}<div class="detail"><strong>Ente accreditante:</strong> {{accrediting_body}}</div>{{/if}}
+        {{#if target_register}}<div class="detail"><strong>Albo:</strong> {{target_register}}</div>{{/if}}
+        {{#if duration}}<div class="detail"><strong>Durata:</strong> {{duration}}</div>{{/if}}
+        {{#if modality}}<div class="detail"><strong>Modalità:</strong> {{modality}}</div>{{/if}}
+        {{#if validity_period}}<div class="detail"><strong>Validità:</strong> {{validity_period}}</div>{{/if}}
+        {{#if deadline}}<div class="detail"><strong>Iscrizioni entro:</strong> <strong style="color:#9b870c;">{{deadline}}</strong></div>{{/if}}
+      </div>
+      {{/if}}
+
+      {{#if target_professions}}
+      <h3>Professioni destinatarie</h3>
+      <div class="professional-list">
+        {{#each target_professions}}
+        <span class="professional-item">{{this}}</span>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if cta_url}}
+      <p style="text-align:center;">
+        <a href="{{cta_url}}" class="btn">{{cta_text}}</a>
+      </p>
+      {{/if}}
+
+      <div class="campus-partnership">
+        <h3>Convenzione per il tuo Albo</h3>
+        <p>Percorsi accreditati, rendicontazione automatizzata, tariffe dedicate per gli iscritti al tuo Albo.</p>
+        <a href="{{convention_url}}" class="btn-white">Richiedi convenzione</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="campus-brand">CAMPUS</span>
+      <span class="motto">DISCERE · DOCERE · CRESCERE</span>
+      <p>
+        <a href="{{campus_url}}">campus.camp</a> ·
+        <a href="mailto:info@campus.camp">info@campus.camp</a>
+      </p>
+      <p>Ricevi questa email perché {{reason}}.</p>
+      <p>
+        <a href="{{unsubscribe_url}}">Cancella iscrizione</a> ·
+        <a href="{{privacy_url}}">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

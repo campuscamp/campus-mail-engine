@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f0f2f5; color: #1a1a2e; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; }
+    .header { background: linear-gradient(135deg, #0f4c75 0%, #1b262c 100%); padding: 32px 24px; text-align: center; border-bottom: 4px solid #3282b8; }
+    .header h1 { color: #ffffff; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; }
+    .header .subtitle { color: #bbe1fa; font-size: 11px; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .header .badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border: 1px solid #3282b8; color: #bbe1fa; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; }
+    .category-bar { background: #e8f4fd; padding: 14px 24px; border-bottom: 1px solid #c4dff0; font-size: 13px; color: #0f4c75; text-align: center; font-weight: 600; }
+    .content { padding: 32px 24px; line-height: 1.7; font-size: 15px; }
+    .content h2 { color: #0f4c75; font-size: 20px; margin: 0 0 16px; font-weight: 600; }
+    .content h3 { color: #1b262c; font-size: 16px; margin: 24px 0 12px; }
+    .content p { margin: 0 0 16px; color: #374151; }
+    .content ul { margin: 0 0 16px; padding-left: 20px; }
+    .content li { margin-bottom: 8px; color: #374151; }
+    .info-card { background: #f8fbfe; border: 1px solid #c4dff0; border-radius: 8px; padding: 20px; margin: 20px 0; }
+    .info-card h4 { color: #0f4c75; margin: 0 0 12px; font-size: 15px; }
+    .info-card .detail { margin-bottom: 8px; font-size: 14px; }
+    .info-card .detail strong { color: #1b262c; }
+    .category-tags { margin: 16px 0; }
+    .category-tag { display: inline-block; background: #e8f4fd; color: #0f4c75; padding: 6px 14px; margin: 3px; font-size: 12px; font-weight: 600; border-radius: 20px; }
+    .value-grid { margin: 24px 0; }
+    .value-item { display: flex; align-items: flex-start; margin-bottom: 16px; }
+    .value-icon { width: 40px; height: 40px; background: #e8f4fd; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 14px; flex-shrink: 0; }
+    .value-text h4 { margin: 0 0 4px; font-size: 14px; color: #0f4c75; }
+    .value-text p { margin: 0; font-size: 13px; color: #6b7280; }
+    .highlight-strip { background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%); color: #ffffff; padding: 24px; margin: 24px 0; text-align: center; border-radius: 8px; }
+    .highlight-strip h3 { color: #ffffff; margin: 0 0 8px; font-size: 18px; }
+    .highlight-strip p { color: #bbe1fa; font-size: 13px; margin: 0 0 16px; }
+    .btn { display: inline-block; padding: 14px 36px; background: #3282b8; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .btn:hover { background: #0f4c75; }
+    .btn-outline { display: inline-block; padding: 12px 28px; background: transparent; color: #0f4c75 !important; text-decoration: none; border: 2px solid #0f4c75; font-weight: 600; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 8px 4px; }
+    .btn-white { display: inline-block; padding: 12px 28px; background: #ffffff; color: #0f4c75 !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 8px 0; }
+    .sectors { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    .sector { flex: 1 1 45%; background: #f8fbfe; border: 1px solid #e8f4fd; padding: 12px; border-radius: 6px; font-size: 13px; }
+    .sector strong { color: #0f4c75; display: block; margin-bottom: 4px; }
+    .sector span { color: #6b7280; font-size: 12px; }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
+    .footer { padding: 24px; background: #1b262c; text-align: center; font-size: 11px; color: #8ba4b8; }
+    .footer a { color: #3282b8; text-decoration: none; }
+    .footer .campus-brand { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; display: block; }
+    .footer .motto { color: #3282b8; font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; display: block; }
+    @media (max-width: 600px) {
+      .content { padding: 24px 16px; }
+      .header { padding: 24px 16px; }
+      .sectors { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CAMPUS</h1>
+      <div class="subtitle">Formazione & Sviluppo per le Categorie</div>
+      <div class="badge">Associazioni di Categoria</div>
+    </div>
+
+    <div class="category-bar">
+      {{#if association_name}}{{association_name}}{{else}}Comunicazione per Associazioni di Categoria{{/if}}
+    </div>
+
+    <div class="content">
+      <h2>{{greeting_title}}</h2>
+
+      <p>Gentile {{title}} {{last_name}},</p>
+      <p>{{body}}</p>
+
+      {{#if sectors}}
+      <h3>Settori coinvolti</h3>
+      <div class="sectors">
+        {{#each sectors}}
+        <div class="sector">
+          <strong>{{this.name}}</strong>
+          <span>{{this.description}}</span>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if program_details}}
+      <div class="info-card">
+        <h4>📋 Proposta formativa</h4>
+        {{#if program_name}}<div class="detail"><strong>Programma:</strong> {{program_name}}</div>{{/if}}
+        {{#if target}}<div class="detail"><strong>Destinatari:</strong> {{target}}</div>{{/if}}
+        {{#if duration}}<div class="detail"><strong>Durata:</strong> {{duration}}</div>{{/if}}
+        {{#if modality}}<div class="detail"><strong>Modalità:</strong> {{modality}}</div>{{/if}}
+        {{#if members_discount}}<div class="detail"><strong>Sconto associati:</strong> {{members_discount}}</div>{{/if}}
+        {{#if date}}<div class="detail"><strong>Data:</strong> {{date}}</div>{{/if}}
+      </div>
+      {{/if}}
+
+      {{#if categories}}
+      <h3>Categorie destinatarie</h3>
+      <div class="category-tags">
+        {{#each categories}}
+        <span class="category-tag">{{this}}</span>
+        {{/each}}
+      </div>
+      {{/if}}
+
+      {{#if cta_url}}
+      <p style="text-align:center;">
+        <a href="{{cta_url}}" class="btn">{{cta_text}}</a>
+      </p>
+      {{/if}}
+
+      <div class="highlight-strip">
+        <h3>Partnership CAMPUS per la tua Associazione</h3>
+        <p>Formazione su misura per i tuoi associati. Tariffe convenzionate, reportistica dedicata, co-branding.</p>
+        <a href="{{partnership_url}}" class="btn-white">Proposta di partnership</a>
+      </div>
+
+      {{#if secondary_cta_url}}
+      <p style="text-align:center;">
+        <a href="{{secondary_cta_url}}" class="btn-outline">{{secondary_cta_text}}</a>
+      </p>
+      {{/if}}
+    </div>
+
+    <div class="footer">
+      <span class="campus-brand">CAMPUS</span>
+      <span class="motto">DISCERE · DOCERE · CRESCERE</span>
+      <p>
+        <a href="{{campus_url}}">campus.camp</a> ·
+        <a href="mailto:info@campus.camp">info@campus.camp</a>
+      </p>
+      <p>Ricevi questa email perché {{reason}}.</p>
+      <p>
+        <a href="{{unsubscribe_url}}">Cancella iscrizione</a> ·
+        <a href="{{privacy_url}}">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f0f2f5; color: #1e293b; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; }
+    .header { background: linear-gradient(135deg, #14532d 0%, #166534 100%); padding: 32px 24px; text-align: center; border-bottom: 4px solid #22c55e; }
+    .header h1 { color: #ffffff; font-size: 22px; margin: 0; font-weight: 700; letter-spacing: 3px; }
+    .header .subtitle { color: #86efac; font-size: 11px; margin: 8px 0 0; letter-spacing: 2px; text-transform: uppercase; }
+    .header .badge { display: inline-block; margin-top: 14px; padding: 6px 20px; border: 1px solid #22c55e; color: #86efac; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; }
+    .syndicate-bar { background: #f0fdf4; padding: 14px 24px; border-bottom: 1px solid #bbf7d0; font-size: 13px; color: #14532d; text-align: center; font-weight: 600; }
+    .content { padding: 32px 24px; line-height: 1.7; font-size: 15px; }
+    .content h2 { color: #14532d; font-size: 20px; margin: 0 0 16px; }
+    .content h3 { color: #14532d; font-size: 16px; margin: 24px 0 12px; }
+    .content p { margin: 0 0 16px; color: #374151; }
+    .contract-card { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px; margin: 16px 0; }
+    .contract-card h4 { color: #14532d; margin: 0 0 8px; }
+    .contract-card p { font-size: 13px; margin: 4px 0; color: #3d6b4f; }
+    .rights-list { margin: 16px 0; padding: 0; list-style: none; }
+    .rights-list li { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 10px 16px; margin: 8px 0; font-size: 14px; color: #374151; }
+    .rights-list li strong { color: #14532d; }
+    .highlight { background: #ecfdf5; border-left: 4px solid #22c55e; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .btn { display: inline-block; padding: 14px 36px; background: #166534; color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; border-radius: 6px; margin: 16px 0; }
+    .campus-box { background: #14532d; color: #ffffff; padding: 24px; margin: 24px 0; text-align: center; border-radius: 8px; }
+    .campus-box h3 { color: #86efac; margin: 0 0 8px; }
+    .campus-box p { color: #a0c0b0; font-size: 13px; margin: 0 0 16px; }
+    .btn-white { display: inline-block; padding: 12px 28px; background: #ffffff; color: #14532d !important; text-decoration: none; font-weight: 600; font-size: 13px; border-radius: 6px; }
+    .footer { padding: 24px; background: #14532d; text-align: center; font-size: 11px; color: #86a898; }
+    .footer a { color: #86efac; text-decoration: none; }
+    .footer .campus-brand { color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 3px; margin-bottom: 4px; display: block; }
+    .footer .motto { color: #86efac; font-size: 10px; letter-spacing: 2px; margin-bottom: 16px; display: block; }
+    @media (max-width: 600px) { .content { padding: 24px 16px; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>CAMPUS</h1>
+      <div class="subtitle">Formazione per il Mondo del Lavoro</div>
+      <div class="badge">Organizzazioni Sindacali</div>
+    </div>
+
+    {{#if union_name}}
+    <div class="syndicate-bar">{{union_name}}</div>
+    {{/if}}
+
+    <div class="content">
+      <h2>Gentile {{title}} {{last_name}},</h2>
+      <p>{{body}}</p>
+
+      {{#if contract_info}}
+      <div class="contract-card">
+        <h4>📋 Formazione contrattuale</h4>
+        {{#if contract_name}}<p><strong>CCNL:</strong> {{contract_name}}</p>{{/if}}
+        {{#if training_hours}}<p><strong>Ore formazione previste:</strong> {{training_hours}}</p>{{/if}}
+        {{#if sectors}}<p><strong>Settori:</strong> {{sectors}}</p>{{/if}}
+        {{#if fund}}<p><strong>Fondo:</strong> {{fund}}</p>{{/if}}
+      </div>
+      {{/if}}
+
+      {{#if worker_rights}}
+      <h3>Diritti formativi dei lavoratori</h3>
+      <ul class="rights-list">
+        {{#each worker_rights}}
+        <li><strong>{{this.title}}:</strong> {{this.description}}</li>
+        {{/each}}
+      </ul>
+      {{/if}}
+
+      {{#if cta_url}}
+      <p style="text-align:center;">
+        <a href="{{cta_url}}" class="btn">{{cta_text}}</a>
+      </p>
+      {{/if}}
+
+      <div class="campus-box">
+        <h3>CAMPUS per le OO.SS.</h3>
+        <p>Formazione sindacale, aggiornamento delegati, percorsi per RSU/RSA, salute e sicurezza.</p>
+        <a href="{{partnership_url}}" class="btn-white">Proposta di collaborazione</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="campus-brand">CAMPUS</span>
+      <span class="motto">DISCERE · DOCERE · CRESCERE</span>
+      <p><a href="{{campus_url}}">campus.camp</a> · <a href="mailto:info@campus.camp">info@campus.camp</a></p>
+      <p>Ricevi questa email perché {{reason}}.</p>
+      <p><a href="{{unsubscribe_url}}">Cancella iscrizione</a> · <a href="{{privacy_url}}">Privacy Policy</a></p>
+    </div>
+  </div>
+</body>
+</html>
