@@ -83,7 +83,14 @@ async function main() {
         subject: subject,
         template: templateHtml,
         data: templateData,
-        type: 'institutional'
+        type: 'institutional',
+        attachments: [
+          {
+            filename: 'Manifesto_Ufficiale_Reclutamento_Docenti_CAMPUS_A4.pdf',
+            path: 'c:/81PLUS_GLOBAL_MASTER/campus.camp/campus-mail-engine/assets/Manifesto_Ufficiale_Call_Docenti_A4.pdf',
+            contentType: 'application/pdf'
+          }
+        ]
       });
 
       if (result.messageId || result.success || result.dryRun) {

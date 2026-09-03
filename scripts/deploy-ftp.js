@@ -22,7 +22,14 @@ export async function deployToCampus(localPath, remoteName = null) {
     });
 
     console.log(`🚀 Upload in corso: ${localPath} ➔ public_html/${targetName}`);
-    await client.uploadFrom(localPath, targetName);
+    const remoteDir = targetName.includes('/') ? targetName.substring(0, targetName.lastIndexOf('/')) : null;
+    const filename = targetName.includes('/') ? targetName.substring(targetName.lastIndexOf('/') + 1) : targetName;
+    if (remoteDir) {
+      await client.ensureDir(remoteDir);
+      await client.uploadFrom(localPath, filename);
+    } else {
+      await client.uploadFrom(localPath, targetName);
+    }
     console.log(`✅ Upload completato con successo! Disponibile su: https://campus.camp/${targetName}`);
 
   } catch (err) {

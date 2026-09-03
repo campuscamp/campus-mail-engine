@@ -86,6 +86,7 @@ export class Mailer {
       html,
       text: html.replace(/<[^>]*>/g, ''), // Strip HTML for text version
       from: `${process.env.MAIL_FROM_NAME || 'CAMPUS'} <${process.env.MAIL_FROM || 'info@campus.camp'}>`,
+      attachments: options.attachments || [],
       unsubscribeUrl: type === 'marketing' ? mergeData.unsubscribe_url : null,
       headers: {
         'X-Campaign-ID': campaignId || 'none',
