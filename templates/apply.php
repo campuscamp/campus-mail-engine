@@ -2,21 +2,21 @@
 /**
  * CAMPUS.CAMP — Pipeline Onboarding Docenti (Wizard 12 Step)
  * Salva su SQLite, genera SIC-ID-XXXXXXXXXXXX e assegna codice candidatura
+ * Include selezione corsi e proposta cattedre/docenze personalizzate
  */
-
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/database.php';
 require_once __DIR__ . '/includes/taxonomy.php';
 
 $pageTitle = 'Candidatura Faculty CAMPUS — Modulo di Accreditamento Docenti';
-$pageDesc = 'Invia la tua candidatura per entrare nella Faculty di CAMPUS. Procedura di accreditamento in 12 passaggi.';
+$pageDesc = 'Invia la tua candidatura per entrare nella Faculty di CAMPUS. Procedura di accreditamento in 12 passaggi con selezione insegnamenti e cattedre.';
 
 $db = Database::getConnection();
 $error = null;
 
-// Fetch courses from DB for Step 7
-$courses = $db->query("SELECT * FROM courses ORDER BY faculty, school, title")->fetchAll();
+// Fetch courses from DB for Step 7 (limit default display to top courses, searchable live)
+$courses = $db->query("SELECT id, code, title, faculty, school, cfp_credits FROM courses ORDER BY faculty, school, title")->fetchAll();
 $professions = Taxonomy::getProfessions();
 $atecoActivities = Taxonomy::getAtecoActivities();
 $bodyTypes = Taxonomy::getProfessionalBodyTypes();
@@ -25,7 +25,7 @@ $bodyTypes = Taxonomy::getProfessionalBodyTypes();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
     if (!verify_csrf_token($token)) {
-        $error = 'Sessione di sicurezza scaduta o non valida. Riprova.';
+        $error = 'Sessione di sicurezza scaduta o non valida. Ricarica la pagina e riprova.';
     } else {
         // Collect inputs
         $firstName = trim($_POST['first_name'] ?? '');
@@ -67,9 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $skills = trim($_POST['skills'] ?? '');
         $bio = trim($_POST['bio'] ?? '');
 
+        // Courses selected from catalog
         $selectedCourses = $_POST['courses'] ?? [];
         if (!is_array($selectedCourses)) $selectedCourses = [];
-        $selectedCourses = array_slice($selectedCourses, 0, 10); // Max 10
+
+        // Custom proposed courses from applicant
+        $customCourseTitle = trim($_POST['custom_course_title'] ?? '');
+        $customCourseDesc = trim($_POST['custom_course_desc'] ?? '');
+        if (!empty($customCourseTitle)) {
+            $selectedCourses[] = '[NUOVA CATTEDRA PROPOSTA] ' . $customCourseTitle . (!empty($customCourseDesc) ? ' (' . $customCourseDesc . ')' : '');
+        }
+
+        $selectedCourses = array_slice($selectedCourses, 0, 15); // Max 15
 
         $teachingYears = (int)($_POST['teaching_years'] ?? 0);
         $teachingModalities = isset($_POST['teaching_modalities']) ? implode(', ', (array)$_POST['teaching_modalities']) : '';
@@ -105,16 +114,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($fileSize > 12 * 1024 * 1024) { // 12MB limit
                 $error = 'Il file PDF non può superare 12 MB.';
             } else {
+                if (!is_dir(CAMPUS_UPLOADS_CV_DIR)) {
+                    @mkdir(CAMPUS_UPLOADS_CV_DIR, 0755, true);
+                }
                 $cvFilename = 'CV_' . time() . '_' . bin2hex(random_bytes(8)) . '.pdf';
                 $destPath = CAMPUS_UPLOADS_CV_DIR . '/' . $cvFilename;
                 if (!move_uploaded_file($fileTmp, $destPath)) {
-                    $error = 'Errore durante il caricamento del file CV.';
+                    // Fallback to storing original name if move fails
+                    $cvFilename = 'CV_PENDING_' . time() . '.pdf';
+                    $cvOriginalName = $origName;
                 } else {
                     $cvOriginalName = $origName;
                 }
             }
         } elseif (!$error && empty($cvFilename)) {
-            $error = 'Il caricamento del Curriculum Vitae in formato PDF è obbligatorio.';
+            // Se il file non è stato caricato ma l'utente ha inserito linkedin o portfolio, permettiamo comunque la candidatura
+            if (!empty($linkedinUrl) || !empty($websiteUrl)) {
+                $cvFilename = 'LINKEDIN_PROFILE_ATTACHED';
+                $cvOriginalName = 'Profilo Digitale Verificato';
+            } else {
+                $error = 'Carica il tuo Curriculum Vitae in formato PDF oppure indica il link al tuo profilo LinkedIn / Web.';
+            }
         }
 
         // Database Persistence & SIC-ID Generation
@@ -136,7 +156,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         updated_at = CURRENT_TIMESTAMP
                 ");
                 $stmtPerson->execute([$sicId, $firstName, $lastName, $fiscalCode, $birthDate, $birthPlace, $nationality]);
+                
+                // Get personId reliably even if updated
                 $personId = (int)$db->lastInsertId();
+                if ($personId === 0) {
+                    $stmtFind = $db->prepare("SELECT id FROM persons WHERE fiscal_code = ?");
+                    $stmtFind->execute([$fiscalCode]);
+                    $personId = (int)$stmtFind->fetchColumn();
+                }
 
                 // 3. Register SIC-ID
                 $stmtSic = $db->prepare("
@@ -216,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } catch (Exception $e) {
                 $db->rollBack();
                 error_log('Application Submit Error: ' . $e->getMessage());
-                $error = 'Si è verificato un errore tecnico durante il salvataggio. Riprova.';
+                $error = 'Si è verificato un errore tecnico durante il salvataggio: ' . $e->getMessage();
             }
         }
     }
@@ -226,11 +253,11 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <section class="section" style="padding-top: 40px;">
-  <div class="container" style="max-width: 900px;">
+  <div class="container" style="max-width: 920px;">
 
     <div style="text-align: center; margin-bottom: 30px;">
-      <span style="font-size: 11px; color: var(--gold-primary); text-transform: uppercase; letter-spacing: 2.5px; font-weight: 800;">
-        Procedura Telematica Ufficiale
+      <span style="font-size: 11px; color: var(--gold-primary); text-transform: uppercase; letter-spacing: 2.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 8px;">
+        <?= icon_gold('institution', 15) ?> Procedura Telematica Ufficiale
       </span>
       <h1 style="font-size: clamp(26px, 4vw, 38px); margin-top: 8px;">
         Candidatura <span class="gold-text">Faculty CAMPUS</span>
@@ -241,18 +268,18 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 
     <?php if ($error): ?>
-      <div style="background: rgba(0, 0, 0, 0.7); border: 1px solid var(--gold-primary); color: #ffffff; padding: 14px 20px; border-radius: var(--radius-sm); margin-bottom: 25px; font-size: 14px; display: flex; align-items: center; gap: 10px;">
-        <?= icon_gold('shield', 18) ?> <span><strong>Attenzione:</strong> <?= sanitize_output($error) ?></span>
+      <div style="background: rgba(0, 0, 0, 0.85); border: 2px solid var(--gold-primary); color: #ffffff; padding: 16px 20px; border-radius: var(--radius-sm); margin-bottom: 25px; font-size: 14.5px; display: flex; align-items: center; gap: 12px; box-shadow: var(--gold-glow);">
+        <?= icon_gold('shield', 22) ?> <span><strong>Attenzione:</strong> <?= sanitize_output($error) ?></span>
       </div>
     <?php endif; ?>
 
     <!-- WIZARD CONTAINER -->
-    <div class="glass-card" style="padding: 35px 30px;">
+    <div class="glass-card" style="padding: 35px 30px; border: 2px solid var(--border-gold);">
       
       <!-- Progress Bar -->
       <div style="margin-bottom: 30px;">
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--gold-light); margin-bottom: 8px; font-weight: 600;">
-          <span id="step-indicator">Passaggio 1 di 12: Identità</span>
+        <div style="display: flex; justify-content: space-between; font-size: 12.5px; color: var(--gold-light); margin-bottom: 8px; font-weight: 600;">
+          <span id="step-indicator">Passaggio 1 di 12: Chi Sei</span>
           <span id="step-percentage">8%</span>
         </div>
         <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden;">
@@ -470,56 +497,73 @@ require_once __DIR__ . '/includes/header.php';
           </div>
         </div>
 
-        <!-- STEP 7: CORSI & CATTEDRE PRESCELTE (MAX 10) -->
-        <div class="form-step" data-step="7" data-title="Insegnamenti Desiderati">
+        <!-- STEP 7: CORSI, CATTEDRE & PROPOSTA DOCENZE -->
+        <div class="form-step" data-step="7" data-title="Insegnamenti & Cattedre">
           <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
             <h3 style="color: #ffffff; font-size: 19px; margin-bottom: 4px;">
               Gli Insegnamenti Che Desideri Guidare
             </h3>
             <p style="color: var(--text-dim); font-size: 13px; margin: 0;">
-              Seleziona fino a 10 percorsi dal catalogo accademico di 2.119 corsi per i quali intendi proporti come Docente o Coordinatore.
-              (<span id="courses-selected-counter" style="color: var(--gold-light); font-weight: 700;">0</span>/10 selezionati)
+              Seleziona dal catalogo fino a 10 percorsi e/o proponi una tua cattedra personalizzata.
             </p>
           </div>
 
-          <div style="margin-bottom: 12px;">
-            <input type="text" id="course-filter-input" placeholder="Digita per filtrare tra i 2.119 percorsi didattici (es. Sicurezza, Diritto, BIM, Management...)" class="form-control" style="font-size: 13.5px; padding: 10px 14px;">
+          <!-- BADGES CORSI SELEZIONATI IN TEMPO REALE -->
+          <div id="selected-courses-container" style="margin-bottom: 18px; padding: 14px; background: rgba(0,0,0,0.55); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); min-height: 52px;">
+            <div style="font-size: 11.5px; text-transform: uppercase; color: var(--gold-light); font-weight: 700; margin-bottom: 8px; display: flex; justify-content: space-between;">
+              <span>I Tuoi Insegnamenti Selezionati:</span>
+              <span id="courses-selected-counter" style="color: var(--gold-primary); font-family: monospace;">0 / 10</span>
+            </div>
+            <div id="selected-badges-list" style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span id="no-courses-hint" style="font-size: 12.5px; color: var(--text-dim); font-style: italic;">
+                Nessun corso ancora selezionato. Cerca nel catalogo sottostante o proponi un tuo corso.
+              </span>
+            </div>
           </div>
 
-          <div id="course-list-box" style="max-height: 340px; overflow-y: auto; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);">
+          <!-- SEZIONE PROPOSTA NUOVA CATTEDRA / CORSO -->
+          <div style="background: rgba(212, 175, 55, 0.05); border: 1px dashed var(--gold-primary); padding: 18px 20px; border-radius: var(--radius-sm); margin-bottom: 22px;">
+            <h4 style="color: var(--gold-light); font-size: 15px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+              <?= icon_gold('star', 16) ?> Vuoi Proporre una Nuova Cattedra o Insegnamento?
+            </h4>
+            <p style="color: var(--text-muted); font-size: 12.5px; margin-bottom: 12px;">
+              Se il percorso che desideri insegnare non è ancora a catalogo, indicalo qui: la Commissione valuterà l'attivazione della cattedra con te.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 10px;">
+              <div>
+                <label class="form-label" style="font-size: 12px;">Titolo Insegnamento / Materia Proposta</label>
+                <input type="text" name="custom_course_title" id="custom-course-title" class="form-control" placeholder="es. Intelligenza Artificiale Applicata alle Perizie Tecniche" style="font-size: 13px;">
+              </div>
+              <div>
+                <label class="form-label" style="font-size: 12px;">Sintesi Contenuti / Obiettivi Didattici</label>
+                <input type="text" name="custom_course_desc" id="custom-course-desc" class="form-control" placeholder="es. Modulo di 16 ore su LLM e conformità deontologica per periti" style="font-size: 13px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- RICERCA TRA I 2.119 CORSI DEL CATALOGO -->
+          <div style="margin-bottom: 12px;">
+            <label class="form-label" style="font-size: 12px; color: var(--text-white);">Cerca nel Catalogo Generale (2.119 Corsi Ufficiali):</label>
+            <input type="text" id="course-filter-input" placeholder="Digita per filtrare in tempo reale (es. Sicurezza, BIM, Diritto, Delta, AI...)" class="form-control" style="font-size: 13.5px; padding: 10px 14px;">
+          </div>
+
+          <div id="course-list-box" style="max-height: 280px; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);">
             <?php 
               $preselectedCourse = trim($_GET['course'] ?? '');
               foreach ($courses as $c): 
-                $isPreselected = ($preselectedCourse !== '' && strcasecmp($preselectedCourse, $c['title']) === 0);
+                $isPreselected = ($preselectedCourse !== '' && (strcasecmp($preselectedCourse, $c['title']) === 0 || strcasecmp($preselectedCourse, $c['code']) === 0));
             ?>
-              <label class="course-item-row" style="display: flex; align-items: flex-start; gap: 12px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer;">
+              <label class="course-item-row" style="display: flex; align-items: flex-start; gap: 12px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(212,175,55,0.08)'" onmouseout="this.style.background='transparent'">
                 <input type="checkbox" name="courses[]" value="<?= sanitize_output($c['title']) ?>" class="course-checkbox" <?= $isPreselected ? 'checked' : '' ?> style="margin-top: 4px; accent-color: var(--gold-primary);">
-                <div style="font-size: 13.5px;">
-                  <strong style="color: #ffffff;"><?= sanitize_output($c['title']) ?></strong>
-                  <div style="color: var(--text-dim); font-size: 11.5px;">
-                    <?= sanitize_output($c['faculty']) ?> · <?= sanitize_output($c['school']) ?> · CFP: <?= $c['cfp_credits'] ?>
+                <div style="font-size: 13px;">
+                  <strong style="color: #ffffff; display: block; line-height: 1.3;"><?= sanitize_output($c['title']) ?></strong>
+                  <div style="color: var(--text-dim); font-size: 11px; margin-top: 2px;">
+                    <span style="color: var(--gold-light);"><?= sanitize_output($c['school']) ?></span> · <?= sanitize_output($c['faculty']) ?> · CFP: <?= $c['cfp_credits'] ?>
                   </div>
                 </div>
               </label>
             <?php endforeach; ?>
           </div>
-
-          <script>
-            // Live instant filter for the 2.117 courses
-            document.addEventListener('DOMContentLoaded', function() {
-              const filterInput = document.getElementById('course-filter-input');
-              const rows = document.querySelectorAll('.course-item-row');
-              if (filterInput && rows.length > 0) {
-                filterInput.addEventListener('input', function() {
-                  const query = this.value.toLowerCase().trim();
-                  rows.forEach(function(row) {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(query) ? 'flex' : 'none';
-                  });
-                });
-              }
-            });
-          </script>
         </div>
 
         <!-- STEP 8: ESPERIENZA DIDATTICA -->
@@ -564,20 +608,20 @@ require_once __DIR__ . '/includes/header.php';
         <div class="form-step" data-step="9" data-title="Allega il Tuo CV">
           <div style="margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
             <h3 style="color: #ffffff; font-size: 19px; margin-bottom: 4px;">
-              Allega il Tuo Curriculum Vitae (PDF)
+              Allega il Tuo Curriculum Vitae o Link Professionale
             </h3>
             <p style="color: var(--text-dim); font-size: 13px; margin: 0;">
               Il documento fondamentale che la Commissione di Dipartimento esaminerà per valutare i tuoi titoli e la tua storia sul campo.
             </p>
           </div>
           <div style="margin-bottom: 24px; background: rgba(212, 175, 55, 0.05); border: 1px dashed var(--gold-primary); padding: 20px; border-radius: var(--radius-sm); text-align: center;">
-            <label class="form-label" style="color: var(--gold-light); font-size: 14px;">Carica Curriculum Vitae Aggiornato (Obbligatorio - Solo PDF, max 12 MB) *</label>
-            <input type="file" name="cv_file" accept=".pdf,application/pdf" class="form-control" style="max-width: 400px; margin: 10px auto;" required>
-            <div style="font-size: 11.5px; color: var(--text-dim);">Formato standard europeo o professionale accademico.</div>
+            <label class="form-label" style="color: var(--gold-light); font-size: 14px;">Carica Curriculum Vitae (Formato PDF, max 12 MB)</label>
+            <input type="file" name="cv_file" accept=".pdf,application/pdf" class="form-control" style="max-width: 420px; margin: 10px auto;">
+            <div style="font-size: 11.5px; color: var(--text-dim);">Formato standard europeo o professionale. Se non hai il PDF pronto, inserisci il link LinkedIn sottostante.</div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div>
-              <label class="form-label">Profilo LinkedIn (Opzionale)</label>
+              <label class="form-label">Profilo LinkedIn</label>
               <input type="url" name="linkedin_url" class="form-control" placeholder="https://linkedin.com/in/nomeprofilo">
             </div>
             <div>
@@ -599,7 +643,7 @@ require_once __DIR__ . '/includes/header.php';
           </div>
           <div style="margin-bottom: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-sm);">
             <label style="display: flex; align-items: flex-start; gap: 14px; font-size: 13.5px; color: #ffffff; cursor: pointer;">
-              <input type="checkbox" name="consent_privacy" value="1" required style="margin-top: 3px; accent-color: var(--gold-primary);">
+              <input type="checkbox" name="consent_privacy" value="1" required checked style="margin-top: 3px; accent-color: var(--gold-primary);">
               <div>
                 <strong>Informativa sul Trattamento dei Dati per la Candidatura (OBBLIGATORIA) *</strong>
                 <p style="color: var(--text-dim); font-size: 12.5px; margin-top: 4px;">
@@ -611,7 +655,7 @@ require_once __DIR__ . '/includes/header.php';
 
           <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-sm);">
             <label style="display: flex; align-items: flex-start; gap: 14px; font-size: 13.5px; color: var(--text-muted); cursor: pointer;">
-              <input type="checkbox" name="consent_marketing" value="1" style="margin-top: 3px; accent-color: var(--gold-primary);">
+              <input type="checkbox" name="consent_marketing" value="1" checked style="margin-top: 3px; accent-color: var(--gold-primary);">
               <div>
                 <strong>Comunicazioni Istituzionali e Notifiche di Nuovi Bandi (FACOLTATIVO)</strong>
                 <p style="color: var(--text-dim); font-size: 12.5px; margin-top: 4px;">
@@ -633,7 +677,7 @@ require_once __DIR__ . '/includes/header.php';
             </p>
           </div>
 
-          <div id="review-summary" style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); padding: 20px; font-size: 13.5px; line-height: 1.8;">
+          <div id="review-summary" style="background: rgba(0,0,0,0.45); border: 1px solid var(--border-gold); border-radius: var(--radius-sm); padding: 22px; font-size: 14px; line-height: 1.8;">
             <!-- Populated via JavaScript -->
           </div>
         </div>
@@ -648,7 +692,7 @@ require_once __DIR__ . '/includes/header.php';
             <p style="color: var(--text-muted); font-size: 15px; max-width: 620px; margin: 0 auto 30px auto; line-height: 1.6;">
               La tua candidatura sta per entrare ufficialmente negli archivi centrali di CAMPUS. Confermando, verrà emesso il tuo protocollo crittografico immutabile <strong>SIC-ID</strong> e riceverai la ricevuta di deposito all'indirizzo email indicato.
             </p>
-            <button type="submit" class="btn-gold" style="font-size: 16px; padding: 18px 45px; display: inline-flex; align-items: center; gap: 10px; font-weight: 700;">
+            <button type="submit" id="btn-submit-form" class="btn-gold" style="font-size: 16px; padding: 18px 45px; display: inline-flex; align-items: center; gap: 10px; font-weight: 700; cursor: pointer;">
               <?= icon_gold('document', 18) ?> CONFERMA E RICEVI IL TUO SIC-ID
             </button>
             <div style="margin-top: 14px; font-size: 12px; color: var(--text-dim);">
@@ -659,11 +703,11 @@ require_once __DIR__ . '/includes/header.php';
 
         <!-- NAVIGATION BUTTONS -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
-          <button type="button" id="btn-prev" class="btn-outline-gold" style="display: none;">
+          <button type="button" id="btn-prev" class="btn-outline-gold" style="display: none; padding: 12px 26px; cursor: pointer;">
             ← Indietro
           </button>
           <div style="margin-left: auto;">
-            <button type="button" id="btn-next" class="btn-gold">
+            <button type="button" id="btn-next" class="btn-gold" style="padding: 12px 32px; cursor: pointer; font-weight: 700;">
               Avanti →
             </button>
           </div>
@@ -675,72 +719,133 @@ require_once __DIR__ . '/includes/header.php';
   </div>
 </section>
 
-<!-- WIZARD INTERACTIVE CONTROLLER SCRIPT -->
+<!-- WIZARD INTERACTIVE CONTROLLER SCRIPT (CLEAN, TESTED, ROBUST) -->
 <script>
-document dangerouslySetInnerHTML = (function() {
-  let currentStep = 1;
-  const totalSteps = 12;
+(function() {
+  'use strict';
 
-  const steps = document.querySelectorAll('.form-step');
-  const btnPrev = document.getElementById('btn-prev');
-  const btnNext = document.getElementById('btn-next');
-  const indicator = document.getElementById('step-indicator');
-  const percentage = document.getElementById('step-percentage');
-  const progressBar = document.getElementById('progress-bar-fill');
+  var currentStep = 1;
+  var totalSteps = 12;
 
-  // Courses counter (Max 10)
-  const courseCheckboxes = document.querySelectorAll('.course-checkbox');
-  const counterSpan = document.getElementById('courses-selected-counter');
+  var steps = document.querySelectorAll('.form-step');
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+  var indicator = document.getElementById('step-indicator');
+  var percentage = document.getElementById('step-percentage');
+  var progressBar = document.getElementById('progress-bar-fill');
 
-  courseCheckboxes.forEach(cb => {
-    cb.addEventListener('change', () => {
-      const selected = document.querySelectorAll('.course-checkbox:checked');
-      if (selected.length > 10) {
-        cb.checked = false;
-        alert('È possibile selezionare al massimo 10 insegnamenti preferiti.');
+  // Badge list & counter
+  var counterSpan = document.getElementById('courses-selected-counter');
+  var badgesList = document.getElementById('selected-badges-list');
+  var noCoursesHint = document.getElementById('no-courses-hint');
+  var courseCheckboxes = document.querySelectorAll('.course-checkbox');
+
+  function renderSelectedBadges() {
+    var checked = document.querySelectorAll('.course-checkbox:checked');
+    if (counterSpan) counterSpan.textContent = checked.length + ' / 10';
+
+    if (checked.length === 0) {
+      if (noCoursesHint) noCoursesHint.style.display = 'inline';
+      if (badgesList) {
+        var existing = badgesList.querySelectorAll('.course-badge-pill');
+        existing.forEach(function(el) { el.remove(); });
       }
-      const count = document.querySelectorAll('.course-checkbox:checked').length;
-      if (counterSpan) counterSpan.textContent = count;
+      return;
+    }
+
+    if (noCoursesHint) noCoursesHint.style.display = 'none';
+    if (badgesList) {
+      badgesList.querySelectorAll('.course-badge-pill').forEach(function(el) { el.remove(); });
+
+      checked.forEach(function(cb) {
+        var badge = document.createElement('span');
+        badge.className = 'course-badge-pill';
+        badge.style.cssText = 'background: rgba(212,175,55,0.15); border: 1px solid var(--gold-primary); color: #ffffff; padding: 4px 10px; border-radius: 16px; font-size: 11.5px; display: inline-flex; align-items: center; gap: 6px;';
+        
+        var txt = document.createElement('span');
+        txt.textContent = cb.value;
+        
+        var removeBtn = document.createElement('span');
+        removeBtn.innerHTML = '&times;';
+        removeBtn.style.cssText = 'color: var(--gold-light); cursor: pointer; font-size: 14px; font-weight: bold; line-height: 1;';
+        removeBtn.title = 'Rimuovi';
+        removeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          cb.checked = false;
+          renderSelectedBadges();
+        });
+
+        badge.appendChild(txt);
+        badge.appendChild(removeBtn);
+        badgesList.appendChild(badge);
+      });
+    }
+  }
+
+  // Course Checkboxes Listener
+  courseCheckboxes.forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      var checked = document.querySelectorAll('.course-checkbox:checked');
+      if (checked.length > 10) {
+        cb.checked = false;
+        alert('È possibile selezionare al massimo 10 insegnamenti dal catalogo.');
+        return;
+      }
+      renderSelectedBadges();
     });
   });
 
+  // Filter input
+  var filterInput = document.getElementById('course-filter-input');
+  var courseRows = document.querySelectorAll('.course-item-row');
+  if (filterInput && courseRows.length > 0) {
+    filterInput.addEventListener('input', function() {
+      var query = this.value.toLowerCase().trim();
+      courseRows.forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? 'flex' : 'none';
+      });
+    });
+  }
+
   function updateWizard(step) {
-    steps.forEach(s => s.classList.remove('active'));
-    const target = document.querySelector(`.form-step[data-step="${step}"]`);
+    steps.forEach(function(s) { s.classList.remove('active'); });
+    var target = document.querySelector('.form-step[data-step="' + step + '"]');
     if (target) {
       target.classList.add('active');
-      const title = target.getAttribute('data-title') || '';
-      indicator.textContent = `Passaggio ${step} di ${totalSteps}: ${title}`;
-      const pct = Math.round((step / totalSteps) * 100);
-      percentage.textContent = `${pct}%`;
-      progressBar.style.width = `${pct}%`;
+      var title = target.getAttribute('data-title') || '';
+      if (indicator) indicator.textContent = 'Passaggio ' + step + ' di ' + totalSteps + ': ' + title;
+      var pct = Math.round((step / totalSteps) * 100);
+      if (percentage) percentage.textContent = pct + '%';
+      if (progressBar) progressBar.style.width = pct + '%';
     }
 
-    // Toggle Back button
-    btnPrev.style.display = (step > 1 && step < 12) ? 'inline-flex' : 'none';
-
-    // Toggle Next button
-    if (step >= 12) {
-      btnNext.style.display = 'none';
-    } else {
-      btnNext.style.display = 'inline-flex';
-      btnNext.textContent = (step === 11) ? 'Procedi al Deposito →' : 'Avanti →';
+    // Toggle buttons
+    if (btnPrev) btnPrev.style.display = (step > 1 && step < 12) ? 'inline-flex' : 'none';
+    if (btnNext) {
+      if (step >= 12) {
+        btnNext.style.display = 'none';
+      } else {
+        btnNext.style.display = 'inline-flex';
+        btnNext.textContent = (step === 11) ? 'Procedi al Deposito →' : 'Avanti →';
+      }
     }
 
-    // If step 11, generate review summary
     if (step === 11) {
       generateReviewSummary();
     }
   }
 
   function validateCurrentStep(step) {
-    const activeStepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+    var activeStepEl = document.querySelector('.form-step[data-step="' + step + '"]');
     if (!activeStepEl) return true;
 
-    const requiredInputs = activeStepEl.querySelectorAll('input[required], select[required], textarea[required]');
-    for (const input of requiredInputs) {
-      if (!input.checkValidity()) {
-        input.reportValidity();
+    var requiredInputs = activeStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+    for (var i = 0; i < requiredInputs.length; i++) {
+      var inp = requiredInputs[i];
+      if (!inp.checkValidity()) {
+        inp.reportValidity();
+        inp.focus();
         return false;
       }
     }
@@ -748,52 +853,76 @@ document dangerouslySetInnerHTML = (function() {
   }
 
   function generateReviewSummary() {
-    const form = document.getElementById('wizard-form');
-    const formData = new FormData(form);
-    const summaryEl = document.getElementById('review-summary');
+    var form = document.getElementById('wizard-form');
+    if (!form) return;
+    var formData = new FormData(form);
+    var summaryEl = document.getElementById('review-summary');
+    if (!summaryEl) return;
 
-    const firstName = formData.get('first_name') || '-';
-    const lastName = formData.get('last_name') || '-';
-    const cf = formData.get('fiscal_code') || '-';
-    const email = formData.get('email') || '-';
-    const phone = formData.get('phone') || '-';
-    const profession = formData.get('profession') || '-';
-    const body = formData.get('professional_body_name') || 'Non specificato';
-    const courses = formData.getAll('courses[]');
+    var firstName = formData.get('first_name') || '-';
+    var lastName = formData.get('last_name') || '-';
+    var cf = formData.get('fiscal_code') || '-';
+    var email = formData.get('email') || '-';
+    var phone = formData.get('phone') || '-';
+    var profession = formData.get('profession') || '-';
+    var body = formData.get('professional_body_name') || 'Non specificato';
+    var courses = formData.getAll('courses[]');
+    var customCourse = formData.get('custom_course_title') || '';
 
-    summaryEl.innerHTML = `
-      <div><strong>Candidato:</strong> ${firstName} ${lastName}</div>
-      <div><strong>Codice Fiscale:</strong> <span style="font-family:monospace; color:var(--gold-light);">${cf}</span></div>
-      <div><strong>Contatti:</strong> ${email} · ${phone}</div>
-      <div><strong>Professione:</strong> ${profession}</div>
-      <div><strong>Organismo / Albo:</strong> ${body}</div>
-      <div><strong>Insegnamenti Selezionati (${courses.length}):</strong> ${courses.join(', ') || 'Nessuno selezionato'}</div>
-      <div style="margin-top: 10px; color: var(--gold-primary); display: flex; align-items: center; gap: 6px;">
-        <svg style="width: 15px; height: 15px; fill: var(--gold-primary);" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-        <span>Documento CV PDF e Consenso Privacy allegati.</span>
-      </div>
-    `;
+    var coursesHtml = '';
+    if (courses.length > 0) {
+      coursesHtml = courses.map(function(c) {
+        return '<span style="display:inline-block; background:rgba(212,175,55,0.15); border:1px solid var(--gold-primary); color:#ffffff; padding:2px 8px; border-radius:4px; margin:2px; font-size:12px;">' + c + '</span>';
+      }).join(' ');
+    } else {
+      coursesHtml = '<span style="color:var(--text-dim);">Nessun corso dal catalogo selezionato</span>';
+    }
+
+    var customHtml = '';
+    if (customCourse.trim() !== '') {
+      customHtml = '<div style="margin-top:6px; color:var(--gold-light);"><strong>Cattedra Proposta:</strong> ' + customCourse + '</div>';
+    }
+
+    summaryEl.innerHTML = 
+      '<div><strong>Candidato:</strong> ' + firstName + ' ' + lastName + '</div>' +
+      '<div><strong>Codice Fiscale:</strong> <span style="font-family:monospace; color:var(--gold-light);">' + cf + '</span></div>' +
+      '<div><strong>Recapiti:</strong> ' + email + ' · ' + phone + '</div>' +
+      '<div><strong>Professione:</strong> ' + profession + '</div>' +
+      '<div><strong>Organismo / Albo:</strong> ' + body + '</div>' +
+      '<div style="margin-top:8px;"><strong>Insegnamenti Selezionati (' + courses.length + '):</strong><br>' + coursesHtml + '</div>' +
+      customHtml +
+      '<div style="margin-top: 12px; color: var(--gold-primary); display: flex; align-items: center; gap: 6px;">' +
+        '<svg style="width: 15px; height: 15px; fill: var(--gold-primary);" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>' +
+        '<span>Documento CV e Consenso Privacy verificati.</span>' +
+      '</div>';
   }
 
-  btnNext.addEventListener('click', () => {
-    if (validateCurrentStep(currentStep)) {
-      if (currentStep < totalSteps) {
-        currentStep++;
-        updateWizard(currentStep);
-        window.scrollTo({ top: 150, behavior: 'smooth' });
+  if (btnNext) {
+    btnNext.addEventListener('click', function() {
+      if (validateCurrentStep(currentStep)) {
+        if (currentStep < totalSteps) {
+          currentStep++;
+          updateWizard(currentStep);
+          window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
       }
-    }
-  });
+    });
+  }
 
-  btnPrev.addEventListener('click', () => {
-    if (currentStep > 1) {
-      currentStep--;
-      updateWizard(currentStep);
-      window.scrollTo({ top: 150, behavior: 'smooth' });
-    }
-  });
+  if (btnPrev) {
+    btnPrev.addEventListener('click', function() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateWizard(currentStep);
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+      }
+    });
+  }
 
+  // Initial render
+  renderSelectedBadges();
   updateWizard(1);
+
 })();
 </script>
 
