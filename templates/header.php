@@ -106,6 +106,23 @@ $canonicalUrl = $canonicalUrl ?? (CAMPUS_DOMAIN . $_SERVER['REQUEST_URI']);
               <a href="/b2b/apply.php?goal=CAMPUS_POINT" class="nav-dropdown-item">CAMPUS Point</a>
             </div>
           </li>
+          <!-- TERRITORI DROPDOWN MENU -->
+          <li class="nav-item-dropdown">
+            <a href="/territori" class="nav-link <?= (str_contains($_SERVER['REQUEST_URI'], 'territori') || str_contains($_SERVER['REQUEST_URI'], 'campus-city')) ? 'active' : '' ?>" style="display: flex; align-items: center; gap: 4px;">
+              Territori <span style="font-size: 9px; color: var(--gold-light);">▼</span>
+            </a>
+            <div class="nav-dropdown-menu">
+              <div class="nav-dropdown-header">CAMPUS FOR CITIES</div>
+              <a href="/campus-city/apply.php" class="nav-dropdown-item">Diventa Città CAMPUS</a>
+              <a href="/campus-city/#modello" class="nav-dropdown-item">Modello CAMPUS City</a>
+              <a href="/campus-city/#strutture" class="nav-dropdown-item">Strutture candidabili</a>
+              <a href="/campus-city/#benefici" class="nav-dropdown-item">Benefici per il territorio</a>
+              <a href="/campus-city/studio-fattibilita.php" class="nav-dropdown-item">Studio di fattibilità</a>
+              <a href="/porto-viro.php" class="nav-dropdown-item">CAMPUS Porto Viro</a>
+              <a href="/campus-city/network.php" class="nav-dropdown-item">Rete dei Comuni</a>
+              <a href="/campus-city/apply.php" class="nav-dropdown-item">Candidatura PA</a>
+            </div>
+          </li>
           <li><a href="/portal.php" class="nav-link <?= (str_contains($_SERVER['REQUEST_URI'], 'portal') || str_contains($_SERVER['REQUEST_URI'], 'user')) ? 'active' : '' ?>">Portale Docenti</a></li>
           <li><a href="/contact.php" class="nav-link <?= str_contains($_SERVER['REQUEST_URI'], 'contact') ? 'active' : '' ?>">Contatti</a></li>
           <li>
