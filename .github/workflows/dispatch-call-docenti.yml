@@ -1,0 +1,63 @@
+name: Dispatch Call Docenti Enti
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Modalità di esecuzione'
+        required: true
+        default: 'dry-run'
+        type: choice
+        options:
+          - 'dry-run'
+          - 'test-single'
+          - 'live-massivo'
+      test_recipient:
+        description: 'Email destinatario (solo se test-single)'
+        required: false
+        default: 'info@campus.camp'
+        type: string
+      delay_ms:
+        description: 'Ritardo tra invii (millisecondi per rate-limiting)'
+        required: false
+        default: '3000'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch-campaign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Esegui Campagna Call Docenti
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_FROM_NAME: ${{ secrets.MAIL_FROM_NAME }}
+          SEND_DELAY_MS: ${{ inputs.delay_ms }}
+        run: |
+          if [ "${{ inputs.mode }}" = "dry-run" ]; then
+            echo "🔍 Esecuzione Simulazione DRY-RUN..."
+            node scripts/run-call-docenti-campaign.js --dry-run
+          elif [ "${{ inputs.mode }}" = "test-single" ]; then
+            echo "🧪 Esecuzione TEST SINGOLO su ${{ inputs.test_recipient }}..."
+            node scripts/run-call-docenti-campaign.js --test "${{ inputs.test_recipient }}"
+          elif [ "${{ inputs.mode }}" = "live-massivo" ]; then
+            echo "🚀 Esecuzione INVIO MASSIVO REALE A TUTTI GLI ENTI..."
+            node scripts/run-call-docenti-campaign.js --live
+          fi

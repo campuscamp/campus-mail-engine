@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{subject}}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      line-height: 1.6;
+    }
+    .wrapper {
+      max-width: 640px;
+      margin: 20px auto;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    .header-bar {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%);
+      padding: 36px 28px;
+      text-align: center;
+      border-bottom: 4px solid #b45309;
+    }
+    .brand-title {
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 5px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .brand-sub {
+      color: #f59e0b;
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-top: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .header-badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 5px 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #f8fafc;
+      font-size: 11px;
+      letter-spacing: 1px;
+      border-radius: 4px;
+    }
+    .protocol-strip {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 28px;
+      font-size: 12px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .content {
+      padding: 32px 28px;
+      font-size: 15px;
+      color: #1e293b;
+    }
+    .salutation {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 18px;
+    }
+    .p-lead {
+      font-size: 15.5px;
+      line-height: 1.65;
+      color: #0f172a;
+      margin-bottom: 18px;
+    }
+    .p-standard {
+      margin-bottom: 16px;
+      color: #334155;
+      line-height: 1.6;
+    }
+    .highlight-card {
+      background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+      border-left: 5px solid #b45309;
+      border-radius: 0 6px 6px 0;
+      padding: 18px 22px;
+      margin: 24px 0;
+    }
+    .highlight-card h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      color: #78350f;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .highlight-card p {
+      margin: 0;
+      font-size: 13.5px;
+      color: #451a03;
+      line-height: 1.5;
+    }
+    .action-steps-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 22px;
+      margin: 26px 0;
+    }
+    .action-steps-box h3 {
+      margin: 0 0 14px 0;
+      color: #166534;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .step-number {
+      background: #166534;
+      color: #ffffff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 12px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-text strong {
+      color: #0f172a;
+      display: block;
+      font-size: 14px;
+    }
+    .step-text span {
+      font-size: 13px;
+      color: #4b5563;
+    }
+    .btn-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .btn-main {
+      display: inline-block;
+      background: #b45309;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 16px 36px;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(180, 83, 9, 0.35);
+    }
+    .btn-main:hover {
+      background: #92400e;
+    }
+    .btn-secondary {
+      display: inline-block;
+      margin-top: 10px;
+      background: transparent;
+      color: #1e3a8a !important;
+      text-decoration: underline;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .pillars-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .pillars-table td {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    .pillars-table td strong {
+      color: #0f172a;
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13.5px;
+    }
+    .pillars-table td span {
+      color: #64748b;
+    }
+    .institutional-sign {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 13px;
+      color: #475569;
+    }
+    .institutional-sign strong {
+      color: #0f172a;
+      font-size: 14px;
+    }
+    .footer {
+      background: #0f172a;
+      padding: 24px 28px;
+      text-align: center;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .footer a {
+      color: #f59e0b;
+      text-decoration: none;
+    }
+    .footer-links {
+      margin-top: 8px;
+    }
+    .footer-links a {
+      margin: 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <div class="header-bar">
+      <h1 class="brand-title">CAMPUS</h1>
+      <div class="brand-sub">Istituzione Accademica & Centro Nazionale di Alta Formazione</div>
+      <div class="header-badge">Protocollo di Comunicazione Istituzionale e Relazioni Accademiche</div>
+    </div>
+
+    <div class="protocol-strip">
+      <div>Prot: <strong>CAMPUS/DIR-FAC/2026-01</strong></div>
+      <div>Destinatario: <strong>{{organization}}</strong></div>
+    </div>
+
+    <div class="content">
+      
+      <div class="salutation">
+        Alla cortese attenzione del Presidente, del Consiglio Direttivo e della Segreteria Generale di {{organization}},
+      </div>
+
+      <p class="p-lead">
+        Ogni presidenza attenta e responsabile conosce il valore inestimabile del proprio patrimonio umano: professionisti eccellenti che, con la loro competenza quotidiana sul campo, tengono alto il decoro della categoria e guidano l'economia del Paese.
+      </p>
+
+      <p class="p-standard">
+        Oggi, <strong>CAMPUS</strong> (piattaforma accademica e polo di formazione continua raggiungibile su <strong>campus.camp</strong>) si rivolge formalmente alla Vostra Istituzione per compiere un passo strategico fondamentale: <strong>trasformare i Vostri migliori iscritti nei Docenti, Formatori e Membri dei Comitati Scientifici</strong> della nostra comunità universitaria e professionale.
+      </p>
+
+      <div class="highlight-card">
+        <h3>🏛️ Bando Pubblico di Reclutamento Docenti — A.A. 2026/2027</h3>
+        <p>
+          È ufficialmente aperta la Call permanente per l'assegnazione di cattedre modulari, docenze universitarie e post-universitarie, seminari accreditati e comitati scientifici. Un'opportunità prestigiosa e remunerata riservata in via prioritaria agli iscritti di <strong>{{organization}}</strong>.
+        </p>
+      </div>
+
+      <p class="p-standard">
+        Siamo consapevoli di quanto i Vostri associati desiderino non soltanto esercitare la professione, ma anche <em>trasmettere il proprio sapere</em>, accrescere la propria reputazione istituzionale e godere di una fonte qualificata di soddisfazione accademica ed economica.
+      </p>
+
+      <table class="pillars-table">
+        <tr>
+          <td style="width: 30px; font-size: 20px;">🎓</td>
+          <td>
+            <strong>Cattedre e Incarichi di Docenza Remunerati</strong>
+            <span>Contratti accademici chiari, retribuzioni certe e massima flessibilità oraria compatibile con l'esercizio quotidiano della libera professione.</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size: 20px;">📜</td>
+          <td>
+            <strong>Convenzione Quadro CFP & Riconoscimento Crediti</strong>
+            <span>CAMPUS riconosce a Voi la facoltà di co-progettare i corsi e garantire ai Vostri iscritti crediti formativi professionali (CFP) a condizioni agevolate o gratuite.</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size: 20px;">💻</td>
+          <td>
+            <strong>Didattica Ibrida di Nuova Generazione</strong>
+            <span>I docenti operano su infrastrutture digitali all'avanguardia con aule virtuali, lezioni registrate, workshop laboratoriali e campus territoriali.</span>
+          </td>
+        </tr>
+      </table>
+
+      <!-- AZIONE IN 2 CLICK - PATTERN PNL -->
+      <div class="action-steps-box">
+        <h3>L'Azione Semplice e Immediata che Vi Chiediamo Oggi:</h3>
+        
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-text">
+            <strong>STAMPA E AFFISSIONE IN SEDE (1 Minuto)</strong>
+            <span>Vi chiediamo di stampare il <em>Manifesto Ufficiale A4</em> allegato alla presente e affiggerlo nella bacheca dell'ingresso o nell'Albo fisico della Vostra sede, affinché ogni iscritto possa vederlo e candidarsi.</span>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-text">
+            <strong>INOLTRO CIRCOLARE TELEMATICA (1 Click)</strong>
+            <span>Inoltrate questa comunicazione via e-mail o pubblicatela come circolare sul Vostro portale web/newsletter. Darete così ai Vostri iscritti un servizio di immenso valore che rafforzerà la loro stima verso il Vostro Consiglio.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-container">
+        <a href="{{manifesto_url}}" class="btn-main" target="_blank">
+          📄 SCARICA E STAMPA IL MANIFESTO A4
+        </a>
+        <br>
+        <a href="{{candidatura_url}}" class="btn-secondary" target="_blank">
+          Oppure visita il Portale Candidature Docenti: campus.camp/faculty
+        </a>
+      </div>
+
+      <p class="p-standard" style="font-size: 13.5px; color: #475569;">
+        <em>Nota di Presidenza:</em> Qualora il Consiglio Direttivo desideri valutare una <strong>Convenzione Quadro Istituzionale bilaterale</strong> con CAMPUS (per accreditamenti personalizzati, borse di studio dedicate o tavoli tecnici), la nostra Segreteria di Rettorato è a Vostra immediata disposizione rispondendo a questa e-mail o scrivendo a <a href="mailto:info@campus.camp" style="color: #b45309; font-weight: 700;">info@campus.camp</a>.
+      </p>
+
+      <div class="institutional-sign">
+        Con i sensi della più alta stima istituzionale,<br><br>
+        <strong>Comitato di Direzione Accademica & Relazioni Istituzionali</strong><br>
+        <em>CAMPUS — Discere · Docere · Crescere</em><br>
+        Piattaforma Istituzionale: <a href="https://campus.camp" style="color: #1e3a8a; text-decoration: none;">www.campus.camp</a>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <div><strong>CAMPUS</strong> · Istituzione di Formazione e Ricerca Accademica</div>
+      <div style="margin-top: 4px;">Sede Legale e Operativa: campus.camp — Contatto Istituzionale: info@campus.camp</div>
+      <div style="margin-top: 10px; color: #64748b;">
+        Ricevete questa comunicazione in quanto Ente Pubblico, Ordine, Collegio o Associazione di Categoria legalmente riconosciuta ai sensi delle normative vigenti sull'aggiornamento e sviluppo delle competenze professionali.
+      </div>
+      <div class="footer-links">
+        <a href="{{unsubscribe_url}}">Disiscrizione notifiche</a> ·
+        <a href="{{privacy_url}}">Informativa Privacy</a> ·
+        <a href="https://campus.camp">Portale CAMPUS</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MANIFESTO UFFICIALE — CALL DOCENTI & COMITATO SCIENTIFICO CAMPUS</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm;
+    }
+    @media print {
+      body { background: #ffffff !important; }
+      .no-print { display: none !important; }
+      .sheet { box-shadow: none !important; margin: 0 !important; width: 100% !important; border: 2px solid #1a2530 !important; }
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Times New Roman', Times, 'Georgia', serif;
+      background-color: #e5e5e5;
+      color: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .no-print-bar {
+      width: 100%;
+      max-width: 800px;
+      margin-bottom: 15px;
+      background: #1e3a8a;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .btn-print {
+      background: #f59e0b;
+      color: #111827;
+      border: none;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .btn-print:hover {
+      background: #d97706;
+    }
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      padding: 20mm;
+      box-sizing: border-box;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      position: relative;
+      border: 3px double #1a365d;
+    }
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      font-size: 85px;
+      font-weight: 900;
+      color: rgba(26, 54, 93, 0.03);
+      text-transform: uppercase;
+      letter-spacing: 15px;
+      pointer-events: none;
+      z-index: 0;
+      white-space: nowrap;
+    }
+    .inner-content {
+      position: relative;
+      z-index: 1;
+    }
+    .header-crest {
+      text-align: center;
+      border-bottom: 2px solid #b45309;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    .crest-title {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: #0f172a;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .crest-sub {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #b45309;
+      margin-top: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .crest-motto {
+      font-size: 11px;
+      font-style: italic;
+      letter-spacing: 3px;
+      color: #475569;
+      margin-top: 4px;
+    }
+    .notice-box {
+      border: 1px solid #0f172a;
+      background: #f8fafc;
+      padding: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .notice-box h2 {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1e293b;
+    }
+    .notice-box p {
+      margin: 4px 0 0 0;
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .call-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin: 20px 0 10px 0;
+      letter-spacing: 1px;
+    }
+    .call-subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 25px;
+      font-style: italic;
+    }
+    .body-p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #1e293b;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .pillar-card {
+      border-left: 3px solid #b45309;
+      background: #fafaf9;
+      padding: 10px 14px;
+      box-sizing: border-box;
+    }
+    .pillar-card h3 {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .pillar-card p {
+      margin: 0;
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: #44403c;
+    }
+    .target-profile-box {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 12px 16px;
+      margin: 20px 0;
+    }
+    .target-profile-box h4 {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #0f172a;
+    }
+    .target-profile-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .how-to-apply {
+      border: 2px dashed #0f172a;
+      padding: 15px;
+      text-align: center;
+      margin-top: 25px;
+      background: #fffbeb;
+    }
+    .how-to-apply h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #92400e;
+    }
+    .how-to-apply p {
+      margin: 4px 0;
+      font-size: 12.5px;
+      color: #1f2937;
+    }
+    .contact-url {
+      font-family: monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e3a8a;
+      display: inline-block;
+      margin: 6px 0;
+    }
+    .affissione-footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 10.5px;
+      color: #64748b;
+    }
+    .affissione-timbro {
+      border: 1px dashed #94a3b8;
+      width: 140px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print-bar no-print">
+    <div>
+      <strong>CAMPUS — Documento Ufficiale per Affissione in Albo / Bacheca Sede</strong>
+      <div style="font-size: 12px; color: #cbd5e1;">Formato A4 ottimizzato per stampa tipografica e digitale</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">🖨️ Stampa Manifesto (A4)</button>
+  </div>
+
+  <div class="sheet">
+    <div class="watermark">CAMPUS.CAMP</div>
+    <div class="inner-content">
+      
+      <div class="header-crest">
+        <h1 class="crest-title">CAMPUS</h1>
+        <div class="crest-sub">Istituzione Accademica & Centro di Formazione Continua</div>
+        <div class="crest-motto">DISCERE · DOCERE · CRESCERE — CAMPUS.CAMP</div>
+      </div>
+
+      <div class="notice-box">
+        <h2>Avviso Ufficiale ai Presidenti, Direttivi e Iscritti agli Ordini, Collegi e Associazioni</h2>
+        <p>Diffusione autorizzata per affissione in sede istituzionale, bacheca fisica e albo telematico</p>
+      </div>
+
+      <div class="call-title">
+        BANDO STRAORDINARIO DI RECLUTAMENTO DOCENTI, MENTOR ED ESPERTI DI ALTA FORMAZIONE
+      </div>
+      <div class="call-subtitle">
+        Anno Accademico 2026/2027 — Iscrizione all'Albo Docenti Ufficiale di CAMPUS
+      </div>
+
+      <p class="body-p">
+        <strong>CAMPUS</strong>, nel quadro dell'espansione della propria offerta formativa nazionale e dei programmi operativi dedicati alla crescita delle competenze specialistiche per le professioni e le imprese, apre la selezione pubblica permanente per il conferimento di <strong>incarichi di docenza, cattedre tematiche e partecipazione ai Comitati Scientifici di Dipartimento</strong>.
+      </p>
+
+      <p class="body-p">
+        La presente Call è indirizzata in via prioritaria ai <strong>professionisti iscritti ad Ordini, Collegi, Albi e Associazioni di Categoria</strong> che intendano valorizzare il proprio bagaglio di esperienza tecnica, deontologica e operativa attraverso l'insegnamento universitario, post-universitario e la Formazione Professionale Continua accreditata (CFP).
+      </p>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <h3>🏛️ Prestigio Istituzionale</h3>
+          <p>Conferimento formale del titolo di Docente / Esperto CAMPUS, pubblicazione del profilo nell'Albo Docenti Accademico e facoltà di proporre moduli monografici e Master specialistici.</p>
+        </div>
+        <div class="pillar-card">
+          <h3>🎓 Erogazione Flessibile</h3>
+          <p>Didattica modulare compatibile con l'esercizio della professione: modalità online sincrona/asincrona, lezioni intensive residenziali e workshop laboratoriali territoriali.</p>
+        </div>
+        <div class="pillar-card">
+          <h3>💼 Remunerazione e Diritti</h3>
+          <p>Incarichi professionali regolarmente contrattualizzati secondo tariffari accademici di eccellenza, con pieno riconoscimento di proprietà intellettuale e crediti didattici.</p>
+        </div>
+        <div class="pillar-card">
+          <h3>🤝 Convenzioni Territoriali</h3>
+          <p>Possibilità per l'Ordine o l'Associazione di appartenenza di stipulare convenzioni quadro per accreditamento CFP e tariffe agevolate per i propri iscritti.</p>
+        </div>
+      </div>
+
+      <div class="target-profile-box">
+        <h4>Profili Professionali Ammessi alla Candidatura:</h4>
+        <ul>
+          <li><strong>Area Tecnica, Edile e Ingegneristica:</strong> Ingegneri, Architetti, Geometri, Periti Industriali, Geologi, Chimici e Fisici.</li>
+          <li><strong>Area Economica, Giuridica e Lavoro:</strong> Dottori Commercialisti, Esperti Contabili, Avvocati, Consulenti del Lavoro, Tributaristi.</li>
+          <li><strong>Area Sanitaria, Cura e Scienze della Vita:</strong> Medici, Odontoiatri, Infermieri specialisti, Farmacisti, Veterinari, Psicologi e Biologi.</li>
+          <li><strong>Area Agraria, Ambiente e Sviluppo Territoriale:</strong> Dottori Agronomi, Forestali, Periti Agrari, Agrotecnici.</li>
+          <li><strong>Area Manageriale, Digitale e Sociale:</strong> Esperti L. 4/2013, Formatori AIF, Coach AICP, Project Manager ISIPM, Esperti Cybersecurity.</li>
+        </ul>
+      </div>
+
+      <div class="how-to-apply">
+        <h3>Modalità di Partecipazione e Deposito Candidatura</h3>
+        <p>I professionisti interessati possono trasmettere il proprio Curriculum Vitae e la proposta didattica all'indirizzo:</p>
+        <div class="contact-url">faculty@campus.camp · info@campus.camp</div>
+        <p>Portale telematico accreditamento: <strong>https://campus.camp/faculty</strong></p>
+        <p style="font-size: 11px; color: #78350f; margin-top: 6px;">
+          (Indicare nell'oggetto: <em>"Candidatura Faculty CAMPUS 2026 — [Ordine/Associazione di Appartenenza] — [Cognome Nome]"</em>)
+        </p>
+      </div>
+
+      <div class="affissione-footer">
+        <div>
+          <strong>CAMPUS</strong> · Piattaforma Istituzionale di Formazione Superiore<br>
+          Dominio accademico: <strong>campus.camp</strong> — Protocollo Diffusione: <strong>CAMPUS/FAC-2026/01</strong>
+        </div>
+        <div class="affissione-timbro">
+          Spazio riservato al timbro / visto di affissione dell'Ente
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
