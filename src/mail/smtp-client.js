@@ -23,6 +23,10 @@ export class SmtpClient extends MailProviderAdapter {
       pool: this.config.pool ?? true,
       maxConnections: this.config.maxConnections ?? 3,
       maxMessages: this.config.maxMessages ?? 50,
+      tls: {
+        // Hostinger uses certificates that may not be in the default CA store
+        rejectUnauthorized: false,
+      },
       logger: false,
       debug: false,
     };
