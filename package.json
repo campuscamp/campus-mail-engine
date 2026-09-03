@@ -19,7 +19,15 @@
     "campaign:dry": "DRY_RUN=true node scripts/campaign-runner.js",
     "health": "node src/api/health.js"
   },
-  "keywords": ["email", "marketing", "automation", "campus", "newsletter", "smtp", "campaign"],
+  "keywords": [
+    "email",
+    "marketing",
+    "automation",
+    "campus",
+    "newsletter",
+    "smtp",
+    "campaign"
+  ],
   "author": "CAMPUS <info@campus.camp>",
   "license": "MIT",
   "repository": {
@@ -30,17 +38,18 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "nodemailer": "^6.9.0",
-    "handlebars": "^4.7.8",
-    "uuid": "^11.0.0",
-    "zod": "^3.23.0",
     "cron": "^3.1.0",
-    "dotenv": "^16.4.0"
+    "dotenv": "^16.4.0",
+    "handlebars": "^4.7.8",
+    "nodemailer": "^6.9.0",
+    "uuid": "^11.0.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
-    "vitest": "^2.0.0",
-    "eslint": "^9.0.0",
     "@eslint/js": "^9.0.0",
-    "globals": "^15.0.0"
+    "basic-ftp": "^6.2.1",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "vitest": "^2.0.0"
   }
 }
