@@ -1,0 +1,32 @@
+{
+  "rules": [
+    { "event": "signup", "points": 5 },
+    { "event": "email_open", "points": 1 },
+    { "event": "email_click", "points": 3 },
+    { "event": "event_registration", "points": 10 },
+    { "event": "faculty_application", "points": 20 },
+    { "event": "company_request", "points": 25 },
+    { "event": "partner_interest", "points": 15 },
+    { "event": "course_enrollment", "points": 15 },
+    { "event": "webinar_attendance", "points": 8 },
+    { "event": "resource_download", "points": 5 },
+    { "event": "form_submission", "points": 7 },
+    { "event": "referral", "points": 12 }
+  ],
+  "stopEvents": [
+    "unsubscribe",
+    "hard_bounce",
+    "complaint"
+  ],
+  "thresholds": {
+    "cold": { "min": 0, "max": 10 },
+    "warm": { "min": 11, "max": 30 },
+    "hot": { "min": 31, "max": 60 },
+    "qualified": { "min": 61, "max": null }
+  },
+  "decayRate": {
+    "enabled": true,
+    "pointsPerDay": 0.1,
+    "minScore": 0
+  }
+}

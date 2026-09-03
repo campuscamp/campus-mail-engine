@@ -1,0 +1,24 @@
+{
+  "segments": [
+    { "id": "GENERAL", "name": "Generale", "description": "Tutti i contatti attivi" },
+    { "id": "NEWSLETTER", "name": "Newsletter", "description": "Iscritti alla newsletter" },
+    { "id": "FACULTY", "name": "Faculty", "description": "Docenti, esperti, formatori" },
+    { "id": "STUDENTS", "name": "Studenti", "description": "Studenti iscritti" },
+    { "id": "LEARNERS", "name": "Learners", "description": "Discenti e partecipanti a corsi" },
+    { "id": "SCHOOLS", "name": "Scuole", "description": "Istituti scolastici K-12" },
+    { "id": "UNIVERSITIES", "name": "Università", "description": "Atenei e istituzioni accademiche" },
+    { "id": "COMPANIES", "name": "Aziende", "description": "Imprese e corporate" },
+    { "id": "PROFESSIONALS", "name": "Professionisti", "description": "Liberi professionisti" },
+    { "id": "PROFESSIONAL_BODIES", "name": "Ordini/Collegi", "description": "Ordini e collegi professionali" },
+    { "id": "PUBLIC_ADMINISTRATION", "name": "Pubblica Amministrazione", "description": "Enti pubblici e PA" },
+    { "id": "MUNICIPALITIES", "name": "Comuni", "description": "Amministrazioni comunali" },
+    { "id": "PARTNERS", "name": "Partner", "description": "Partner istituzionali e operativi" },
+    { "id": "SPONSORS", "name": "Sponsor", "description": "Sponsor e donatori" },
+    { "id": "TERRITORY", "name": "Territorio", "description": "Stakeholder territoriali" },
+    { "id": "COMMUNITY", "name": "Community", "description": "Membri della community CAMPUS" },
+    { "id": "EVENTS", "name": "Eventi", "description": "Partecipanti e interessati a eventi" },
+    { "id": "RESEARCH", "name": "Ricerca", "description": "Ricercatori e centri di ricerca" },
+    { "id": "MEDIA", "name": "Media", "description": "Giornalisti, redazioni, media" },
+    { "id": "INSTITUTIONAL", "name": "Istituzionale", "description": "Comunicazioni istituzionali CAMPUS" }
+  ]
+}

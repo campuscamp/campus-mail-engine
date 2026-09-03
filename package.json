@@ -1,0 +1,46 @@
+{
+  "name": "campus-mail-engine",
+  "version": "1.0.0",
+  "description": "CAMPUS Mail Engine — Email & Marketing Automation for campus.camp",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/ tests/ scripts/",
+    "lint:fix": "eslint src/ tests/ scripts/ --fix",
+    "test:smtp": "node scripts/test-smtp.js",
+    "send:test": "node scripts/send-test.js",
+    "validate:contacts": "node scripts/validate-contacts.js",
+    "warmup": "node scripts/warmup.js",
+    "campaign:run": "node scripts/campaign-runner.js",
+    "campaign:dry": "DRY_RUN=true node scripts/campaign-runner.js",
+    "health": "node src/api/health.js"
+  },
+  "keywords": ["email", "marketing", "automation", "campus", "newsletter", "smtp", "campaign"],
+  "author": "CAMPUS <info@campus.camp>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/campuscamp/campus-mail-engine.git"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0",
+    "handlebars": "^4.7.8",
+    "uuid": "^11.0.0",
+    "zod": "^3.23.0",
+    "cron": "^3.1.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0",
+    "eslint": "^9.0.0",
+    "@eslint/js": "^9.0.0",
+    "globals": "^15.0.0"
+  }
+}

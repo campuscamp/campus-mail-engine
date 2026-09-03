@@ -1,0 +1,15 @@
+{
+  "campaigns": [
+    {
+      "name": "Newsletter Benvenuto CAMPUS",
+      "type": "marketing",
+      "subject": "Benvenuto in CAMPUS, {{first_name}}!",
+      "template": "newsletter/base.html",
+      "segment": "NEWSLETTER",
+      "batch_size": 10,
+      "rate_limit": 5,
+      "dry_run": true,
+      "scheduled_at": null
+    }
+  ]
+}

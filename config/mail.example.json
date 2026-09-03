@@ -1,0 +1,52 @@
+{
+  "smtp": {
+    "host": "smtp.hostinger.com",
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "SMTP_USER_FROM_ENV",
+      "pass": "SMTP_PASS_FROM_ENV"
+    },
+    "pool": true,
+    "maxConnections": 3,
+    "maxMessages": 50,
+    "rateDelta": 1000,
+    "rateLimit": 5
+  },
+  "sender": {
+    "from": "CAMPUS <info@campus.camp>",
+    "replyTo": "info@campus.camp"
+  },
+  "rateLimiting": {
+    "batchSize": 10,
+    "emailsPerMinute": 5,
+    "emailsPerHour": 100,
+    "dailyCap": 500,
+    "retryLimit": 3,
+    "retryDelayMs": 60000,
+    "batchDelayMs": 5000
+  },
+  "warmup": {
+    "enabled": true,
+    "startDate": null,
+    "schedule": {
+      "day_1_3": 20,
+      "day_4_7": 40,
+      "day_8_14": 75,
+      "day_15_plus": 150
+    },
+    "_note": "These are conservative defaults. Verify actual limits in your Hostinger hPanel."
+  },
+  "dryRun": true,
+  "tracking": {
+    "opens": false,
+    "clicks": false
+  },
+  "unsubscribe": {
+    "baseUrl": "https://campus.camp/unsubscribe",
+    "method": "one-click"
+  },
+  "privacy": {
+    "url": "https://campus.camp/privacy"
+  }
+}

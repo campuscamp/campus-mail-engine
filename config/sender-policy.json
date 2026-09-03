@@ -1,0 +1,48 @@
+{
+  "policies": {
+    "transactional": {
+      "requireConsent": false,
+      "requireUnsubscribe": false,
+      "description": "Email di servizio (conferma registrazione, reset password, ricevute)"
+    },
+    "institutional": {
+      "requireConsent": false,
+      "requireUnsubscribe": true,
+      "description": "Comunicazioni istituzionali obbligatorie"
+    },
+    "marketing": {
+      "requireConsent": true,
+      "requireUnsubscribe": true,
+      "description": "Newsletter, campagne, promozioni — richiede consenso esplicito"
+    }
+  },
+  "rules": {
+    "neverSendTo": [
+      "consent_status != 'granted' (for marketing)",
+      "status == 'unsubscribed'",
+      "status == 'bounced'",
+      "status == 'suppressed'",
+      "status == 'invalid'",
+      "email fails validation"
+    ],
+    "alwaysInclude": {
+      "marketing": ["unsubscribe_url", "privacy_url", "sender_identity", "reason_for_email"],
+      "institutional": ["unsubscribe_url", "sender_identity"],
+      "transactional": ["sender_identity"]
+    }
+  },
+  "sender": {
+    "name": "CAMPUS",
+    "email": "info@campus.camp",
+    "replyTo": "info@campus.camp",
+    "organization": "CAMPUS",
+    "website": "https://campus.camp"
+  },
+  "compliance": {
+    "gdpr": true,
+    "doubleOptIn": true,
+    "consentAuditLog": true,
+    "dataRetentionDays": 1095,
+    "rightToErasure": true
+  }
+}
